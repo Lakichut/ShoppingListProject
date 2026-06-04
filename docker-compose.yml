@@ -1,0 +1,47 @@
+
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=Ioan1234
+      - MONGO_INITDB_ROOT_PASSWORD=IoanSecret
+      - MONGO_INITDB_DATABASE=list-products
+    volumes:
+      - data:/data/db
+    networks:
+      - list-products-network
+
+  frontend_image_ioan:
+    container_name: frontend_container_ioan
+    image: yoanlakov/ioan-dockerfile-frontend:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/usr/src/app/src
+    networks:
+      - list-products-network
+
+  backend_image_ioan:
+    container_name: backend_container_ioan
+    image: yoanlakov/ioan-dockerfile-backend:latest
+    ports:
+      - "80:80"
+    volumes:
+      - logs:/usr/src/app/logs
+      - node_modules_volume:/usr/src/app/node_modules
+      - ./frontend/src:/usr/src/app/src
+    networks:
+      - list-products-network
+
+volumes:
+  data:
+  logs:
+  node_modules_volume:
+
+networks:
+  list-products-network:
+    driver: bridge
